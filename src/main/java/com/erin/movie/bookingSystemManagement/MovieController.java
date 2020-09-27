@@ -1,4 +1,4 @@
-package com.erin.movie.service;
+package com.erin.movie.bookingSystemManagement;
 
 public class MovieController {
 

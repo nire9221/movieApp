@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"  
+    xmlns:th="http://www.thymeleaf.org"
+    xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="description" content="zoo cinema movie web springboot">
+<title>Zoo Cinema</title>
+<link rel="canonical" href="https://getbootstrap.com/docs/4.5/examples/album/">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css">
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+<style>
+.bd-placeholder-img {
+   font-size: 1.125rem;
+   text-anchor: middle;
+   -webkit-user-select: none;
+   -moz-user-select: none;
+   -ms-user-select: none;
+   user-select: none;
+}
+
+@media ( min-width : 768px) {
+   .bd-placeholder-img-lg {
+      font-size: 3.5rem;
+   }
+}
+
+<!--social button-->
+.fa {
+  padding: 20px;
+  font-size: 20px;
+  width: 30px;
+  text-align: center;
+  text-decoration: none;
+  margin: 5px 2px;
+  border-radius: 50%;
+}
+
+.fa:hover {
+    opacity: 0.7;
+}
+
+.fa-facebook {
+  background: #3B5998;
+  color: white;
+}
+
+.fa-twitter {
+  background: #55ACEE;
+  color: white;
+}
+
+.fa-google {
+  background: #dd4b39;
+  color: white;
+}
+.fa-youtube {
+  background: #bb0000;
+  color: white;
+}
+
+.fa-instagram {
+  background: #125688;
+  color: white;
+}
+
+.carousel-item img{
+   height:800px;
+}
+
+.checked {
+color: orange;
+} 
+
+</style>
+
+</head>
+<body>
+<header>
+	<div class="navbar navbar-dark bg-dark shadow-sm">
+		<div class="container d-flex justify-content-between">
+			<a href="/" class="navbar-brand d-flex align-items-center">
+			<img th:src="@{/images/logo.png}" alt="logo" width="80" height="60">
+			<strong>Zoo Cinema</strong>
+			</a>
+			
+			<a href="test">Test Page</a>
+			<a sec:authorize="hasRole('ADMIN')" href="adminOnly">adminOnly Page</a>
+			<a sec:authorize="!isAuthenticated()" href="signup">Signup</a>
+			<a sec:authorize="!isAuthenticated()" href="login">Login</a>
+			<a sec:authorize="isAuthenticated()" href="mypage">My page</a>
+			<a sec:authorize="isAuthenticated()" href="logout">Logout</a>
+			<p sec:authorize="hasRole('ADMIN')">[이 부분은 운영자(ADMIN)에게만 나타남]</p>
+			<p sec:authorize="hasRole('GUEST')">[이 부분은 손님(GUEST)에게만 나타남]</p>
+			<p sec:authorize="isAuthenticated()">[이 부분은 로그인한 사용자(isAuthenticated) 모두에게 나타남]</p>
+		</div>
+ 	</div>
+</header>
+  
+  <!-- main start -->
+<main role="main" class = "bg-light">
+
+<!-- 영화정보 페이지 -->
+<div id="currentMovie" class="album py-5 bg-light" style="margin-bottom:45px; margin-top:45px;">
+   <div class="container">      
+      <div class="row">
+<!-------------------------- box1 -------------------------->
+         <div class="col-md-4">  <!-- th:each="movie,index: ${movieList}" -->
+            <div class="card mb-4 shadow-sm" id="movieResult">
+             <img class="card-img-top" width="50%" height="350" alt="thumbnail"/>
+                <p id="getMovieInfo" style="padding:20px" th:text="movie.movieNm"></p>
+      
+         <div class="card-body">
+            <div class="d-flex justify-content-between align-items-center">
+            <form action="/detailinfo" class="btn-group" method="get">
+               <a type="submit" class="btn btn-md btn-outline-warning" data-toggle="modal" data-target="#detail">상세보기</a>
+               <a id="bookBtn" th:href="@{/bookingpage}" class="btn btn-outline-warning ">예매하기</a>
+               <i class="fas fa-film fa-2x" style="margin-left:10px"></i>
+            </form>
+            </div>
+         </div>
+            </div>
+         </div>
+      </div>
+
+<!--  modal -->
+<div id="detail" class="modal fade" >
+    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+<!-- modal content -->    
+      <div class="modal-content"  >
+        <div class="modal-header" >
+           <h4 class="modal-title"></h4>
+           <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+        
+        <div class="modal-body">
+           <div class="container-fluid">
+               <div class="row">
+                  <div class="col-sm-9 trailer"> 
+                    <div class="row">
+                       <div class="col-8 col-sm-6"> 
+                          <div class="embed-responsive embed-responsive-16by9">
+                             <iframe src="" class="embed-responsive-item" allowfullscreen></iframe>
+                        </div>
+                       </div>
+                     <div class="col-4 col-sm-6 description"> </div>
+                    </div>
+                  </div>
+             </div>
+             <form action="/" method="get">
+             <button id="bookBtn" th:href="@{/bookingpage}" type="button" class="btn btn-primary float-right">예매하기</button></form>
+           <br> 
+             <div>
+                <div th:text="movieDetail.movieCd"></div>
+                  상영시간 : <div th:text="runtime"> </div>
+                  개봉일 : <div th:text="releasedate"> </div>
+                  장르 : <div th:text="genre"> </div>
+                  상영등급 : <div th:text="grade"> </div>
+                  감독 : <div th:text="director"> </div>
+                  배우 : <div th:text="actor"> </div>
+             </div> 
+          </div> 
+        </div> 
+        <!--  modal body end-->
+
+	  </div>
+	</div> 
+</div>
+   
+
+
+<!-- 상영예정작 -->
+<!-- <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+	<ol class="carousel-indicators">
+		<li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
+		<li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
+		<li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
+	</ol>
+	<div class="carousel-inner ">
+    <div class="carousel-item active">
+      <img class="d-block w-100" src="https://dispatch.cdnser.be/wp-content/uploads/2018/09/20180922200509_page.jpg" alt="kingsMan3">
+        <div class="carousel-caption d-none d-md-block">
+         <p> 
+            <a href="https://g.co/kgs/9uATnM" target="_blank" class="btn btn-warning my-2">상세보기</a> 
+            <a href="https://youtu.be/kBmwyJaCaic" target="_blank" class="btn btn-warning my-2">예고편 보기</a>
+         </p>
+      </div>
+    </div>
+    
+    <div class="carousel-item">
+      <img class="d-block w-100" src="https://blog.kakaocdn.net/dn/QlmeX/btqGGH00kNF/uEOMiTqu7IvZsL7D5KHpD1/img.jpg" alt="Mulan">
+        <div class="carousel-caption d-none d-md-block">
+         <p> 
+            <a href="https://g.co/kgs/SoEL6b" target="_blank" class="btn btn-outline-light my-2">상세보기</a> 
+            <a href="https://youtu.be/FxFN6s2LFMs" target="_blank" class="btn btn-outline-light my-2">예고편 보기</a>
+         </p>
+      </div>
+    </div>
+    
+    <div class="carousel-item">
+      <img class="d-block w-100" src="https://frightfind.com/wp-content/uploads/2019/09/conjuring-3-1280x720.jpg" alt="conjuring3">
+        <div class="carousel-caption d-none d-md-block">
+         <p> 
+            <a href="https://g.co/kgs/AFQdoo" target="_blank" class="btn btn-outline-info my-2">상세보기</a> 
+            <a href="https://youtu.be/XJUF9AF_xq8" target="_blank" class="btn btn-outline-info my-2">예고편 보기</a>
+         </p>
+      </div>
+    </div>
+  </div>
+   <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
+       <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+       <span class="sr-only">Previous</span>
+   </a>
+   <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
+       <span class="carousel-control-next-icon" aria-hidden="true"></span>
+       <span class="sr-only">Next</span>
+     </a>
+</div> -->
+
+
+</div>
+</div>
+</main>
+
+
+<!-- footer -->
+
+<div class="jumbotron text-center" style="margin-bottom:0">
+
+<div class="container">
+
+<div class="footer_sns">
+   <a th:href="@{https://www.facebook.com/}" th:target="_blank" class="fa fa-facebook fa-2x"></a>
+   <a th:href="@{https://www.twitter.com/}" th:target="_blank" class="fa fa-twitter fa-2x"></a>
+   <a th:href="@{https://www.google.com/}" th:target="_blank" class="fa fa-google fa-2x"></a>
+   <a th:href="@{https://www.youtube.com/}" th:target="_blank" class="fa fa-youtube fa-2x"></a>
+   <a th:href="@{https://www.instagram.com/}" th:target="_blank" class="fa fa-instagram fa-2x"></a>
+</div>
+
+
+<div id="footer_infor">
+<div class="container">
+<!--       <div class="footer_infor">
+         <ul>
+            <li><a href="#">회사소개</a></li>
+            <li><a href="#">채용정보</a></li>
+            <li><a href="#">제휴/광고/부대사업 문의</a></li>
+            <li><a href="#">이용약관</a></li>
+            <li><a href="#">개인정보처리방침</a></li>
+            <li><a href="#">고객센터</a></li>
+            <li><a href="#">윤리경영</a></li>
+         </ul>
+      </div> -->   
+<address>
+<small>서울특별시 서초구 강남대로 459, Zoo Film(주) <br> <span class="bar2">대표자명 강진영</span> 개인정보보호 책임자 경영지원실 실장 임대혁<br>
+<span class="bar2">사업자등록번호 123-45-67890</span> 통신판매업신고번호 제 1111호 </small><br>
+<small>Copyright 2020 by Zoo Cinema Inc. All right reserved</small>
+</address>
+      <p class="float-right"> <a href="#">Back to top</a></p>
+</div>
+</div>
+</div>
+</div>
+   
+<script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery-slim.min.js"><\/script>')</script>
+<script src="../../assets/js/vendor/popper.min.js"></script>
+<script src="../../dist/js/bootstrap.min.js"></script>
+<script src="../../assets/js/vendor/holder.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+<script>
+$('.carousel').carousel({
+  interval: 4000
+})
+
+/*----------------------------youtube----------------------------*/
+function getVideo() {
+   var innerText = document.getElementById("getMovieInfo").innerText;
+   var keyword = innerText + " 트레일러";
+    $.ajax({
+      type: 'GET',
+      url: 'https://www.googleapis.com/youtube/v3/search',
+      data: {
+          key: 'AIzaSyA7RSMS9VIAwIriOxRmXUrZ6_lnwB_Bg5c',
+          q: keyword, //$("mvList.movieNm").val() //"테넷 트레일러" set keyword 
+          part: 'snippet',
+          maxResults: 1,
+          type: 'video',
+          videoEmbeddable: true,
+      },
+      success: function(data){
+          embedVideo(data)
+      },
+      error: function(response){
+          console.log("Request Failed");
+      }
+    });
+  }
+function embedVideo(data) {
+    $('iframe').attr('src', 'https://www.youtube.com/embed/' + data.items[0].id.videoId)
+    $('.description').text(data.items[0].snippet.description)
+}
+getVideo();
+//참고 : https://dev.to/aveb/making-your-first-get-request-to-youtube-search-api-4c2f
+
+
+</script>
+
+<script>
+var count;
+var words;
+
+function starmark(item){
+count=item.id[0];
+sessionStorage.starRating = count;
+var subid= item.id.substring(1);
+for(var i=0;i<5;i++){
+if(i<count){
+document.getElementById((i+1)+subid).style.color="orange";
+}else{
+document.getElementById((i+1)+subid).style.color="black";
+}
+}
+}
+
+/* function result(){
+//평점 : Count
+//한줄평 : Comment(id)
+alert("평점 : "+count+"\n한줄평 : "+document.getElementById("comment").value);
+} */
+
+</script>
+<script type="text/javascript" th:inline="javascript">
+        function deleteComment(postId, commentId){
+            document.getElementById("deleteComment").action = "/comments/"+postId + "/" + commentId;
+            document.getElementById("deleteComment").submit();
+        }
+    </script>
+</html>

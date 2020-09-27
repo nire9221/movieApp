@@ -37,7 +37,7 @@ public class PostgreSQLRunner implements ApplicationRunner {
 //            statement.executeUpdate(sql);
         }
 
-        jdbcTemplate.execute("INSERT INTO ACCOUNT VALUES(1, 'saelobi')");
+//        jdbcTemplate.execute("INSERT INTO ACCOUNT VALUES(1, 'saelobi')");
     }
 }
 
